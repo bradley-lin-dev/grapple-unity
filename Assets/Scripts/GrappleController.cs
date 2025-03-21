@@ -26,6 +26,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Rigidbody))]
 public class GrappleController : MonoBehaviour {
     [Header("Targeting")]
 
@@ -141,9 +142,16 @@ public class GrappleController : MonoBehaviour {
     // Ratio of animation completion.
     float m_grappleAnimation = 0f;
 
+    Rigidbody m_rigidbody;
+
+    [SerializeField]
+    float grapplePull = 8f;
+
     void Awake() {
         // Get the player's camera according to the attached camera controller.
         m_camera = cameraController.GetComponent<Camera>();
+
+        m_rigidbody = GetComponent<Rigidbody>();
 
         // Can't be null so just set it to itself.
         grappleTransform = transform;
@@ -295,6 +303,10 @@ public class GrappleController : MonoBehaviour {
             ToggleGrapple();
         }
         m_grappleBufferTimer -= Time.deltaTime;
+
+        if (Mathf.Approximately(m_grappleInterpolant, 1f)) {
+            m_rigidbody.linearVelocity += grappleToPoint.normalized * grapplePull;
+        }
     }
 
     void OnGrappleDown(InputAction.CallbackContext context) {
