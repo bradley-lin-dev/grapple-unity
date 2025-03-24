@@ -3531,8 +3531,9 @@ MonoBehaviour:
   jumpSleepTime: 0.1
   cameraController: {fileID: 330585548}
   moveSpeed: 256
-  jumpPower: 10
-  decelerationPower: 64
+  jumpPower: 32
+  decelerationPower: 16
+  verticalDecelerationPower: 0
   playerCollider: {fileID: 1886754689}
   playerJumpLayers:
     serializedVersion: 2
@@ -3691,7 +3692,7 @@ MonoBehaviour:
   grappleLocation: {x: 0, y: 0, z: 0}
   grappleTransform: {fileID: 0}
   grappleBufferTime: 0.1
-  grapplePull: 4
+  grapplePull: 256
 --- !u!1 &2109032444
 GameObject:
   m_ObjectHideFlags: 0

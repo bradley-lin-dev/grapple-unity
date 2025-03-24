@@ -54,7 +54,10 @@ public class PlayerController : MonoBehaviour {
     float jumpPower = 10f;
 
     [SerializeField]
-    float decelerationPower = 32f;
+    float decelerationPower = 16f;
+
+    [SerializeField]
+    float verticalDecelerationPower = 1f;
 
     [SerializeField]
     CapsuleCollider playerCollider;
@@ -106,11 +109,14 @@ public class PlayerController : MonoBehaviour {
         Vector3 rotatedMoveDir = Quaternion.AngleAxis(-cameraController.cameraLook.x, Physics.gravity) * new Vector3(m_moveDir.x, 0f, m_moveDir.y);
         Vector3 planarisedMoveDir = rotatedMoveDir - Vector3.Project(rotatedMoveDir, Physics.gravity);
         Vector3 normalisedMoveDir = planarisedMoveDir.normalized;
-        m_rigidbody.linearVelocity += (normalisedMoveDir * moveSpeed + Physics.gravity) * Time.fixedDeltaTime;
+        m_rigidbody.AddForce(normalisedMoveDir * moveSpeed, ForceMode.Acceleration);
+        m_rigidbody.AddForce(Physics.gravity, ForceMode.Acceleration);
         Vector3 verticalLinearVelocity = Vector3.Project(m_rigidbody.linearVelocity, Physics.gravity);
         Vector3 planarLinearVelocity = m_rigidbody.linearVelocity - verticalLinearVelocity;
-        planarLinearVelocity /= Mathf.Max(1f, decelerationPower * Time.fixedDeltaTime);
+        planarLinearVelocity *= Mathf.Exp(-Time.fixedDeltaTime * decelerationPower);
+        verticalLinearVelocity *= Mathf.Exp(-Time.fixedDeltaTime * verticalDecelerationPower);
         m_rigidbody.linearVelocity = verticalLinearVelocity + planarLinearVelocity;
+        
 
         Vector3 castOrigin = transform.position - playerCollider.radius * Physics.gravity.normalized;
         RaycastHit groundInfo;

@@ -304,8 +304,13 @@ public class GrappleController : MonoBehaviour {
         }
         m_grappleBufferTimer -= Time.deltaTime;
 
+        
+    }
+
+    void FixedUpdate() {
+        Vector3 grappleDisplacement = grappleTransform.TransformPoint(grappleLocation) - grappleLine.position;
         if (Mathf.Approximately(m_grappleInterpolant, 1f)) {
-            m_rigidbody.linearVelocity += grappleToPoint.normalized * grapplePull;
+            m_rigidbody.AddForce(grapplePull * grappleDisplacement.normalized + Vector3.Project(-m_rigidbody.linearVelocity, grappleDisplacement), ForceMode.Acceleration);
         }
     }
 
