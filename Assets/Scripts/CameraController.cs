@@ -159,4 +159,10 @@ public class CameraController : MonoBehaviour {
         float nearCameraWidth = nearCameraHeight * cam.aspect;
         return new Vector3(nearCameraWidth, nearCameraHeight, cam.nearClipPlane);
     }
+
+    public static Vector3 FarCameraBox(Camera cam) {
+        float farCameraHeight = Mathf.Tan(0.5f * cam.fieldOfView * Mathf.Deg2Rad) * cam.farClipPlane * 2f;
+        float farCameraWidth = farCameraHeight * cam.aspect;
+        return new Vector3(farCameraWidth, farCameraHeight, cam.farClipPlane);
+    }
 }
