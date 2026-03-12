@@ -71,6 +71,15 @@ public class CameraController : MonoBehaviour {
     void Awake() {
         m_playerCamera = GetComponent<Camera>();
 
+        
+
+        Screen.fullScreen = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        lockCrosshair.enabled = false;
+    }
+
+    private void OnEnable() {
         m_cameraLockAction = new InputAction(type: InputActionType.Button, binding: "/Keyboard/leftShift");
         m_cameraLockAction.started += ToggleCameraLock;
         m_cameraLockAction.Enable();
@@ -86,16 +95,24 @@ public class CameraController : MonoBehaviour {
         m_useCameraAction = new InputAction(type: InputActionType.PassThrough, binding: "/Mouse/rightButton");
         m_useCameraAction.performed += UseCamera;
         m_useCameraAction.Enable();
-
-        Screen.fullScreen = true;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        lockCrosshair.enabled = false;
     }
 
-    
+    private void OnDisable() {
+        m_cameraLockAction.started -= ToggleCameraLock;
+        m_cameraLockAction.Disable();
 
-    
+        m_cameraZoomAction.performed -= ZoomCamera;
+        m_cameraZoomAction.Disable();
+
+        m_cameraLookAction.performed -= LookCamera;
+        m_cameraLookAction.Disable();
+
+        m_useCameraAction.performed -= UseCamera;
+        m_useCameraAction.Disable();
+    }
+
+
+
     void Update() {
         RaycastHit hitInfo;
         if (Cursor.visible || cameraZoom == 0f) {

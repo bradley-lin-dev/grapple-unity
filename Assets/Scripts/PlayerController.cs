@@ -65,6 +65,14 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     LayerMask playerJumpLayers;
 
+    [SerializeField]
+    LayerMask enemyLayers;
+
+    public int health = 3;
+
+    [SerializeField]
+    float invincibilityTime = 1f;
+    float m_invincibilityTimer;
 
     void Awake() {
         m_rigidbody = GetComponent<Rigidbody>();
@@ -127,6 +135,8 @@ public class PlayerController : MonoBehaviour {
             m_jumpCoyoteTimer -= Time.fixedDeltaTime;
         }
         m_jumpSleepTimer -= Time.fixedDeltaTime;
+
+        m_invincibilityTimer -= Time.fixedDeltaTime;
     }
 
     void OnJumpDown(InputAction.CallbackContext context) {
@@ -148,5 +158,12 @@ public class PlayerController : MonoBehaviour {
         m_rigidbody.Move(Vector3.zero, Quaternion.identity);
         cameraController.cameraLook = Vector2.zero;
         cameraController.Look(Vector2.zero);
+    }
+
+    private void OnTriggerStay(Collider other) {
+        if (((enemyLayers.value & (1u << other.gameObject.layer)) != 0u) && (m_invincibilityTimer <= 0f)) {
+            health--;
+            m_invincibilityTimer = invincibilityTime;
+        }
     }
 }
