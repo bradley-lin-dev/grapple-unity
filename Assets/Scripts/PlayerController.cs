@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour {
     void ResetPlayer(InputAction.CallbackContext context) {
         m_rigidbody.linearVelocity = Vector3.zero;
         m_rigidbody.Move(Vector3.zero, Quaternion.identity);
-        cameraController.cameraLook = Vector2.zero;
+        cameraController.cameraLook = cameraController.initialLook;
         cameraController.Look(Vector2.zero);
     }
 

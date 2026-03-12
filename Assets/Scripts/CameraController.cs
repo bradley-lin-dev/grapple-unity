@@ -67,11 +67,15 @@ public class CameraController : MonoBehaviour {
     bool useCamera;
 
     [SerializeField]
+    public Vector2 initialLook;
+
+    [SerializeField]
     Vector3 testDistance;
     void Awake() {
         m_playerCamera = GetComponent<Camera>();
 
-        
+        cameraLook = initialLook;
+        Look(Vector2.zero);
 
         Screen.fullScreen = true;
         Cursor.lockState = CursorLockMode.None;
