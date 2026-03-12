@@ -23,8 +23,12 @@ SOFTWARE.
 */
 
 using UnityEngine;
+using UnityEngine.AI;
 
 public class QuantumLockEnemy : MonoBehaviour {
+    [SerializeField]
+    NavMeshAgent agent;
+
     [SerializeField]
     Transform target;
 
@@ -67,6 +71,9 @@ public class QuantumLockEnemy : MonoBehaviour {
     [Header("Detector")]
     [SerializeField]
     Collider cameraFrustrumCollider;
+
+    [SerializeField]
+    FlagOverlap flagOverlap;
 
     enum EnemyState {
         idle,
@@ -115,7 +122,7 @@ public class QuantumLockEnemy : MonoBehaviour {
             meshFilter.sharedMesh = lookaheadTrigger.sharedMesh;
             currentTrigger.sharedMesh = lookaheadTrigger.sharedMesh;
             meshCollider.sharedMesh = lookaheadTrigger.sharedMesh;
-
+            
             if (m_enemyState == EnemyState.aware) m_enemyState = EnemyState.alert;
             if (m_enemyState == EnemyState.preparing) m_enemyState = EnemyState.attacking;
 
@@ -127,12 +134,20 @@ public class QuantumLockEnemy : MonoBehaviour {
             m_trueSpeed *= 0.5f;
         }
 
+        lookahead.position = current.position;
+
         if (m_enemyState >= EnemyState.attacking)
             lookahead.LookAt(target, -Physics.gravity);
         else if (m_enemyState >= EnemyState.alert)
             lookahead.forward = (target.position - lookahead.position) - Vector3.Project(target.position - lookahead.position, Physics.gravity);
-        if (m_enemyState >= EnemyState.attacking)
-            lookahead.position = current.position + lookahead.forward * Time.fixedDeltaTime * m_trueSpeed;
+
+        if (m_enemyState >= EnemyState.attacking) {
+            //lookahead.GetComponent<Rigidbody>().linearVelocity = (target.position - lookahead.position).normalized * m_trueSpeed;
+            agent.destination = target.position;
+            
+        }
+            
+        
 
         if (m_enemyState == EnemyState.alert) lookaheadTrigger.sharedMesh = alertMesh;
         if (m_enemyState == EnemyState.attacking) lookaheadTrigger.sharedMesh = attackingMesh;
