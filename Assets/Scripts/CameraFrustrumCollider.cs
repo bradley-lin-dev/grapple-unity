@@ -55,7 +55,11 @@ public class CameraFrustrumCollider : MonoBehaviour {
             4,0,1  // right
         };
         filter.mesh = mesh;
+#if UNITY_6000_4_OR_NEWER
+        Physics.BakeMesh(mesh.GetEntityID(), true, MeshColliderCookingOptions.WeldColocatedVertices);
+#else
         Physics.BakeMesh(mesh.GetHashCode(), true, MeshColliderCookingOptions.WeldColocatedVertices);
+#endif
         m_collider.sharedMesh = mesh;
     }
 
