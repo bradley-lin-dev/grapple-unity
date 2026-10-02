@@ -56,7 +56,7 @@ public class CameraFrustrumCollider : MonoBehaviour {
         };
         filter.mesh = mesh;
 #if UNITY_6000_4_OR_NEWER
-        Physics.BakeMesh(mesh.GetEntityID(), true, MeshColliderCookingOptions.WeldColocatedVertices);
+        Physics.BakeMesh(mesh.GetEntityId(), true, MeshColliderCookingOptions.WeldColocatedVertices);
 #else
         Physics.BakeMesh(mesh.GetHashCode(), true, MeshColliderCookingOptions.WeldColocatedVertices);
 #endif
